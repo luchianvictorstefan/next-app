@@ -1,13 +1,16 @@
 "use client"
 
-import { zodResolver } from "@hookform/resolvers/zod"
-import { useForm } from "react-hook-form"
-import { z } from "zod"
-import { Button } from "@/components/ui/button"
+import { UserFormValidation } from '@/app/lib/validation'
 import {
   Form,
 } from "@/components/ui/form"
+import { zodResolver } from "@hookform/resolvers/zod"
+import { useRouter } from 'next/navigation'
+import { useState } from 'react'
+import { useForm } from "react-hook-form"
+import { z } from "zod"
 import CustomFormField from '../CustomFormField'
+import { SubmitButton } from '../SubmitButton'
 
 export enum FormFieldType {
   INPUT = 'input',
@@ -19,26 +22,34 @@ export enum FormFieldType {
   SKELETON = 'skeleton',
 }
 
-const formSchema = z.object({
-  username: z.string().min(2, {
-    message: "Username must be at least 2 characters.",
-  }),
-})
+
 
 export function PersonForm() {
+  const router = useRouter();
+  const [isLoading, setIsLoading] = useState(false);
   // 1. Define your form.
-  const form = useForm<z.infer<typeof formSchema>>({
-    resolver: zodResolver(formSchema),
+  const form = useForm<z.infer<typeof UserFormValidation>>({
+    resolver: zodResolver(UserFormValidation),
     defaultValues: {
-      username: "",
+
+      name: "",
+      email: '',
+      phone: ''
     },
   })
 
   // 2. Define a submit handler.
-  function onSubmit(values: z.infer<typeof formSchema>) {
-    // Do something with the form values.
-    // ✅ This will be type-safe and validated.
-    console.log(values)
+  function onSubmit({ name, email, phone }: z.infer<typeof UserFormValidation>) {
+    setIsLoading(true);
+    try {
+      const userData = { name, email, phone }
+
+      // const user = await createUser(userData);
+      // if (user) router.push(`/persons/${user.$id}/register`)
+    } catch (error) {
+      console.log(error);
+    }
+
   }
   return (
     <Form {...form}>
@@ -73,7 +84,8 @@ export function PersonForm() {
           />
         </section>
 
-        <Button type="submit">Submit</Button>
+        <SubmitButton isLoading={isLoading} >
+          Get started</SubmitButton>
       </form>
     </Form>
   )
