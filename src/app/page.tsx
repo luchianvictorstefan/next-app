@@ -1,12 +1,18 @@
 import PersonForm from '@/components/forms/PersonForm';
 import Image from "next/image";
 import Link from 'next/link';
+import { logtoConfig } from './logto/logto';
+import { getLogtoContext, signIn, signOut } from '@logto/next/server-actions';
+import SignIn from './sign-in';
+import SignOut from './sign-out';
 
-export default function Home() {
-  const vara = process.env.SERVER_SIDE_ONLY_VAR;
+export default async function Home() {
+  const { isAuthenticated, claims } = await getLogtoContext(logtoConfig);
 
   return (
+
     <div className='flex h-screen max-h-screen'>
+
       <section className='remove-scrollbar container my-auto'>
         <div className="sub-container max-w-[496px]">
           <Image src='/assets/icons/waffle-logo-full2.svg'
@@ -15,10 +21,32 @@ export default function Home() {
             alt='patient'
             className='mb-12 h-10 fit'
           ></Image>
-          <PersonForm />
+          {/* <PersonForm /> */}
+          <nav className="flex flex-col items-center space-y-8">
+            {isAuthenticated ? (
+              <p className="flex flex-col items-center mb-12 space-y-4 text-white">
+                Hello, {claims?.sub},
+                <SignOut
+                  onSignOut={async () => {
+                    'use server';
+                    await signOut(logtoConfig);
+                  }}
+                />
+              </p>
+            ) : (
+              <p className="flex flex-col items-center text-white">
+                <SignIn
+                  onSignIn={async () => {
+                    'use server';
+                    console.log('clicked');
+                    await signIn(logtoConfig);
+                  }}
+                />
+              </p>
+            )}
+          </nav>
+
           <div className='text-14-regular mt-20 flex justify-between'>
-            <p>NEXT PUBLIC VAR {process.env.NEXT_PUBLIC_MY_ENV_VARIABLE}</p>
-            <p>ENV VAR {vara}</p>
             <p className='justify-items-end text-dark-600 xl:text-left'>
               &copy; 2022 Your Company Name. All rights reserved.
             </p>
