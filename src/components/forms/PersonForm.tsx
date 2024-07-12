@@ -58,7 +58,6 @@ export function PersonForm() {
           <h1 className='header'>Hi there</h1>
           <p className='text-dark-700'>Join us, we have cookies</p>
           <p>NEXT PUBLIC VAR {process.env.NEXT_PUBLIC_MY_ENV_VARIABLE}</p>
-          <p>ENV VAR {process.env.SERVER_SIDE_ONLY_VAR}</p>
           <CustomFormField
             fieldType={FormFieldType.INPUT}
             name='name'

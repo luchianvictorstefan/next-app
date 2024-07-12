@@ -3,6 +3,8 @@ import Image from "next/image";
 import Link from 'next/link';
 
 export default function Home() {
+  const vara = process.env.SERVER_SIDE_ONLY_VAR;
+
   return (
     <div className='flex h-screen max-h-screen'>
       <section className='remove-scrollbar container my-auto'>
@@ -15,9 +17,9 @@ export default function Home() {
           ></Image>
           <PersonForm />
           <div className='text-14-regular mt-20 flex justify-between'>
+            <p>NEXT PUBLIC VAR {process.env.NEXT_PUBLIC_MY_ENV_VARIABLE}</p>
+            <p>ENV VAR {vara}</p>
             <p className='justify-items-end text-dark-600 xl:text-left'>
-              <p>NEXT PUBLIC VAR {process.env.NEXT_PUBLIC_MY_ENV_VARIABLE}</p>
-              <p>ENV VAR {process.env.SERVER_SIDE_ONLY_VAR}</p>
               &copy; 2022 Your Company Name. All rights reserved.
             </p>
             <Link href="/?admin=true" className='text-green-500'>Admin
